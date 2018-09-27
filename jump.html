@@ -1,15 +1,151 @@
-<!docType html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <script>
-      function test() {
-        alert("mytest");
-      }
-    </script>
-  </head>
-  <body>
-    <input type="button" value="test" onclick="test();" /><br>
-    
-    <input type="button" value="test2" onclick="test();" />
-  </body>
+<head>
+<meta charset="UTF-8">
+<title>jump</title>
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1.0, minimum-scale=1.0, shrink-to-fit=no">
+<meta name="format-detection" content="telephone=no,email=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="">
+<meta name="apple-itunes-app" content="app-id=446332125">
+<meta name="full-screen" content="yes">
+<meta name="x5-fullscreen" content="true">
+<script>
+
+	function rcsOptimizeReady() 
+	{
+		// 获取平台类型
+		var ua = navigator.userAgent.toLowerCase();
+		if (/android/.test(ua)) {
+			navigator.WebContainer = window.WebContainer;
+		}
+	}
+
+	function init()
+	{
+		getCurrPageUrl();
+		//alert(getCookie("mylink"));
+		var mylink = getCookie("mylink");
+		if (mylink)
+		{
+			document.getElementById("link_url").value = getCookie("mylink");
+			change();
+		}
+	}
+
+	function getCurrPageUrl()
+	{
+		document.getElementById("curr_url").innerText = document.location;
+	}
+	
+	function showApi()
+	{
+		window.location.href="hefeix_api.html?random=" + Math.random();
+	}
+
+	function change()
+	{
+		var linkUrl = document.getElementById("link_url").value;
+		if (-1 != linkUrl.indexOf("?"))
+		{
+			var param = location.search;
+			if (-1 != param.indexOf("?"))
+			{
+				linkUrl = linkUrl + "&" + param.substr(1);
+			}
+		}
+		else
+		{
+			linkUrl = linkUrl + location.search;
+		}
+		//alert(linkUrl);
+		var content = "<a href=\"" +  linkUrl  + "\" >Click here</a>";
+		document.getElementById("container").innerHTML = content;
+		setCookie("mylink", document.getElementById("link_url").value, 10000);
+	}
+	
+	
+	function getCookie(c_name) 
+	{
+		if (document.cookie.length > 0) 
+		{
+			c_start = document.cookie.indexOf(c_name + "=")
+			if (c_start != -1) 
+			{
+				c_start = c_start + c_name.length + 1
+				c_end = document.cookie.indexOf(";", c_start)
+				if (c_end == -1)
+					c_end = document.cookie.length
+				return unescape(document.cookie.substring(c_start, c_end))
+			}
+		}
+		return "http://10.129.148.154:8080/mc/hefeix/login.jsp"
+	}
+
+	function setCookie(c_name, value, expiredays) 
+	{
+		var exdate = new Date()
+		exdate.setDate(exdate.getDate() + expiredays)
+		document.cookie = c_name
+				+ "="
+				+ escape(value)
+				+ ((expiredays == null) ? "" : ";expires="
+						+ exdate.toGMTString())
+	}
+
+	function checkCookie() 
+	{
+		username = getCookie('username')
+		if (username != null && username != "") {
+			alert('Welcome again ' + username + '!')
+		} else {
+			username = prompt('Please enter your name:', "")
+			if (username != null && username != "") {
+				setCookie('username', username, 365)
+			}
+		}
+	}
+	
+	function scanUrl()
+	{
+		var para = {};
+		para.backId = "";
+		para.backFunc="scanUrlCallback"
+		navigator.WebContainer.getQRContent(JSON.stringify(para));
+	}
+	
+	function scanUrlCallback(jsonString)
+	{
+		var result = JSON.parse(jsonString);
+		if ("0" == result.status)
+		{
+			alert("扫码失败");
+		}
+		else
+		{
+			alert("扫码成功");
+			
+			document.getElementById("link_url").value = result.content;
+			change();
+		}
+	}
+	
+	
+</script>
+</head>
+<body onload="init();">
+
+<input type="button" value="Show" onclick="getCurrPageUrl();" />
+<input type="button" value="API" onclick="showApi();" />
+<br/><br/>
+<span>URL: </span><span id="curr_url"></span>
+<br/><br/><br/>
+<input id="link_url" type="text" style="width:300px"/><input type="button" value="Change" onclick="change();" />
+
+<input type="button" value="扫一扫" onclick="scanUrl();">
+<br/><br/>
+<div id="container"><span>test</span></div>
+
+</body>
 </html>
