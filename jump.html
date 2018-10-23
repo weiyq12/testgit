@@ -60,7 +60,7 @@
 			linkUrl = linkUrl + location.search;
 		}
 		//alert(linkUrl);
-		var content = "<a href=\"" +  linkUrl  + "\" >Click here</a>";
+		var content = "<a href=\"" +  linkUrl  + "\" >跳转</a>";
 		document.getElementById("container").innerHTML = content;
 		setCookie("mylink", document.getElementById("link_url").value, 10000);
 	}
@@ -145,7 +145,7 @@
 
 <input type="button" value="扫一扫" onclick="scanUrl();">
 <br/><br/>
-<div id="container"><span>test</span></div>
+<div id="container"><span>...</span></div>
 
 </body>
 </html>
